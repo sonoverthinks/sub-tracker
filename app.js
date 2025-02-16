@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import { PORT } from "./config/env.js";
 import userRouter from "./routes/user.routes.js";
 import authRouter from "./routes/auth.routes.js";
@@ -6,6 +7,18 @@ import subscriptionRouter from "./routes/subscription.routes.js";
 import connectToDatabase from "./database/mongodb.js";
 
 const app = express();
+// Middleware to parse JSON bodies
+// It automatically parses JSON request bodies and makes the data available on req.body.
+app.use(express.json());
+
+// Middleware to parse URL-encoded bodies
+// It parses URL-encoded data (e.g., form data) and makes it available on req.body.
+app.use(express.urlencoded({ extended: false }));
+
+// Middleware to parse cookies
+// Necessary for applications that use cookies for session management, user authentication, or storing user preferences.
+app.use(cookieParser());
+
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);
