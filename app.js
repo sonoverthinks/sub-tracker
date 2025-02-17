@@ -5,6 +5,7 @@ import userRouter from "./routes/user.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
 import connectToDatabase from "./database/mongodb.js";
+import arcjetMiddleware from "./middlewares/arcjet.middleware.js";
 
 const app = express();
 // Middleware to parse JSON bodies
@@ -18,6 +19,9 @@ app.use(express.urlencoded({ extended: false }));
 // Middleware to parse cookies
 // Necessary for applications that use cookies for session management, user authentication, or storing user preferences.
 app.use(cookieParser());
+
+// arcket rate limiting
+app.use(arcjetMiddleware);
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
