@@ -64,6 +64,7 @@ export const signIn = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
+    console.log("🚀 ~ signIn ~ user:", user);
 
     // Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);

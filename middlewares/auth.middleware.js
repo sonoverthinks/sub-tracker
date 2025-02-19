@@ -15,6 +15,11 @@ const authorize = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
+
+      // const error = new Error("Unauthorized");
+      // error.statusCode = 401;
+      // error.message = "No token";
+      // throw error;
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);

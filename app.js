@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import { PORT } from "./config/env.js";
 import userRouter from "./routes/user.routes.js";
@@ -17,17 +18,19 @@ app.use(express.json());
 // It parses URL-encoded data (e.g., form data) and makes it available on req.body.
 app.use(express.urlencoded({ extended: false }));
 
+app.use(cors());
+
 // Middleware to parse cookies
 // Necessary for applications that use cookies for session management, user authentication, or storing user preferences.
 app.use(cookieParser());
 // arcket rate limiting
 app.use(arcjetMiddleware);
 // global error checking
-app.use(errorMiddleware);
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);
+app.use(errorMiddleware);
 
 app.get("/", (req, res) => {
   res.send({ greeting: "hello" });
