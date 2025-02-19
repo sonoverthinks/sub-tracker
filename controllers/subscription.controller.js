@@ -44,6 +44,65 @@ export const getSubscription = async (req, res, next) => {
   }
 };
 
+export const editSubscription = async (req, res, next) => {
+  try {
+    const subId = req.params.id;
+    const {
+      name,
+      price,
+      currency,
+      frequency,
+      category,
+      paymentMethod,
+      status,
+      startDate,
+      renewalDate,
+    } = req.body;
+
+    // Find the subscription
+    const subscription = await Subscription.findById(subId);
+    // Check if subscription exists
+    if (!subscription) {
+      const error = new Error("Subscription not found");
+      error.status = 404;
+      throw error;
+    }
+
+    // Verify ownership
+    if (subscription.user.toString() !== req.user.id) {
+      const error = new Error(
+        "You are not authorized to edit this subscription"
+      );
+      error.status = 403;
+      throw error;
+    }
+
+    const updatedSubscription = await Subscription.findByIdAndUpdate(
+      subId,
+      {
+        name,
+        price,
+        currency,
+        frequency,
+        category,
+        paymentMethod,
+        status,
+        startDate,
+        renewalDate,
+        updatedAt: new Date(),
+      },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).send({
+      success: true,
+      data: updatedSubscription,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const deleteSubscription = async (req, res, next) => {
   try {
     // extract sub id
